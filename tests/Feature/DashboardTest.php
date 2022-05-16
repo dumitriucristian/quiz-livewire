@@ -63,16 +63,17 @@ test('question is deleted', function(){
 });
 
 test('question can be edited', function(){
-    Question::factory()->create(["text" => "First question"]);
-    $question =  Question::find(1);
-    dd($question);
+    Question::factory(1)->create(["text" => "First question"]);
+    $question =  Question::all()->first();
+
     expect($question)->text->toEqual('First question');
 
     Livewire::actingAs($this->user);
     Livewire::test(QuizAdmin::class)
-        ->call('deleteQuestion', 5);
+        ->set(['questionText' => 'Edited question', 'questionId' => $question->id])
+        ->call('updateQuestion', $question->id,);
 
-    $question = Question::all();
-    expect($question)->toHaveCount(4);
+    $question =  Question::all()->first();
+    expect($question)->text->toEqual('Edited question');
 
 });
