@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('text');
             $table->bigInteger('question_id')->nullable();
             $table->boolean('correct')->default(false);
+            $table->integer('order');
             $table->timestamps();
         });
     }

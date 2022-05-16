@@ -18,21 +18,24 @@
                         <button type="submit" class="btn  px-6 shadow-md bg-green-500">Add Question</button>
                     </div>
                 </form>
-                <div class="grid bg-white gap-4">
+                <ul class="grid bg-white gap-4" wire:sortable="updateQuestionsOrder" >
                     @if($questions)
+
                         @foreach ($questions as $index => $question)
-                            <div
+                            <li
                                 class="p-2 bg-gray-500 text-white flex justify-between"
-                                wire:click="showAnswers({{$question}})"
+                                wire:sortable.item="{{$question->id}}"
                                 wire:key="question-id-{{ $question->id }}"
                             >
-                                <p>{{ $question->text }}</p>
+                                <span wire:sortable.handle>MOVE</span>
+                                <span>{{ $question->text }}</span>
                                 <span><button wire:click.stop="deleteQuestion({{ $question->id}})">Delete</button></span>
-                                <span><button  wire:click.stop="openEditQuestion({{$question}}) "@click.stop="open = true; questionModal = true;">Edit</button></span>
-                            </div>
+                                <span><button wire:click.stop="openEditQuestion({{$question}})" @click.stop="open = true; questionModal = true;">Edit</button></span>
+                                <span><button wire:click="showAnswers({{$question}})">Answers</button></span>
+                            </li>
                         @endforeach
                     @endif
-                </div>
+                </ul>
             </div>
             <!--//https://laravel-livewire.com/screencasts/s8-dragging-list -->
             <div class="bg-gray-100 p-6">
@@ -58,7 +61,7 @@
                             <div wire:key="answer-id-{{ $answer->id }}" class="p-2 bg-gray-500 text-white flex justify-between">
                                 <p>{{ $answer->text }}</p>
                                 <span><button wire:click="deleteAnswer({{ $answer->id}})">Delete</button></span>
-                                <span><button  wire:click.stop="openEditAnswer({{$answer}}) "@click.stop="open = true; answerModal = true;" >Edit</button></span>
+                                <span><button  wire:click.stop="openEditAnswer({{$answer}})" @click.stop="open = true; answerModal = true;" >Edit</button></span>
                             </div>
                         @endforeach
                     @endif

@@ -1,5 +1,6 @@
 const mix = require('laravel-mix');
-
+//require('livewire-sortablejs');
+//const livewireSortable = require('livewire-sortable');
 
 /*
  |--------------------------------------------------------------------------
@@ -16,6 +17,7 @@ mix.js('resources/js/app.js', 'public/js').postCss('resources/css/app.css', 'pub
     require('postcss-import'),
     require('tailwindcss'),
     require('autoprefixer'),
+
 ]);
 
 
