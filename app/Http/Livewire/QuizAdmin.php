@@ -148,11 +148,14 @@ class QuizAdmin extends Component
     }
     public function updateQuestionsOrder($items)
     {
-        //dd($items);
+
+       //get items id's
       $items_id =   array_map(function($item){
             return $item['value'];
         }, $items);
       $items_id = implode(',', $items_id);
+
+      //create update statement
       $statement = "UPDATE `questions` SET `order` = CASE";
 
       foreach($items as $item){
@@ -163,7 +166,7 @@ class QuizAdmin extends Component
       //dd($statement);
       DB::statement($statement);
       /* DB::statement(
-"UPDATE `questions`
+        "UPDATE `questions`
        SET `order` = CASE
        WHEN `id` = 1  THEN 6
        WHEN `id` = 2 THEN 2
@@ -171,7 +174,7 @@ class QuizAdmin extends Component
        END WHERE id in(1,2)"
        );
 
-*/
+        */
 
       //  dd(Question::all());
     }

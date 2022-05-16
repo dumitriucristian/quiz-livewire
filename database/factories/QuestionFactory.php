@@ -18,7 +18,8 @@ class QuestionFactory extends Factory
     public function definition()
     {
         return [
-            'text' => $this->faker->text()
+            'text' => $this->faker->text(),
+            'order'=> $this->faker->randomNumber()
         ];
     }
 }
