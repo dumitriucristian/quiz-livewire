@@ -1,4 +1,5 @@
 require('./bootstrap');
+require('livewire-sortablejs');
 
 import Alpine from 'alpinejs';
 

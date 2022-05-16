@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Answer;
 use Livewire\Component;
 use App\Models\Question;
+use Illuminate\Support\Facades\DB;
 
 class QuizAdmin extends Component
 {
@@ -43,22 +44,30 @@ class QuizAdmin extends Component
             'questionText' => 'required:min:6'
         ]);
 
+        $count = Question::count();
+
         Question::create([
-            'text' => $validatedData['questionText']
+            'text' => $validatedData['questionText'],
+            'order' => $count
         ]);
 
         $this->reset(['questionText']);
     }
 
     public function createAnswer() {
+
         $validatedData = $this->validate([
             'answerText' => 'required:min:6',
             'questionId' => 'required'
         ]);
 
+        $count = Answer::count();
+
         Answer::create([
             'text' => $validatedData['answerText'],
-            'question_id' => $validatedData['questionId']
+            'question_id' => $validatedData['questionId'],
+            'order' => $count
+
         ]);
 
         $question = Question::findOrFail($validatedData['questionId']);
@@ -137,5 +146,38 @@ class QuizAdmin extends Component
         $answer->save();
 
     }
+    public function updateQuestionsOrder($items)
+    {
+
+       //get items id's
+      $items_id =   array_map(function($item){
+            return $item['value'];
+        }, $items);
+      $items_id = implode(',', $items_id);
+
+      //create update statement
+      $statement = "UPDATE `questions` SET `order` = CASE";
+
+      foreach($items as $item){
+          $statement .= " WHEN `id` = ". $item['order'] ." THEN ". $item['value'];
+      }
+      $statement .= " else `order` END WHERE id in(".$items_id. ")";
+
+      //dd($statement);
+      DB::statement($statement);
+      /* DB::statement(
+        "UPDATE `questions`
+       SET `order` = CASE
+       WHEN `id` = 1  THEN 6
+       WHEN `id` = 2 THEN 2
+       ELSE `order`
+       END WHERE id in(1,2)"
+       );
+
+        */
+
+      //  dd(Question::all());
+    }
+
 
 }
