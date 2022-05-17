@@ -147,41 +147,9 @@ class QuizAdmin extends Component
         $answer->save();
 
     }
-    public function updateQuestionsOrder($items)
+    public function updateQuestionsOrder( $items)
     {
-
-       //get items id's
-      $items_id =   array_map(function($item){
-            return $item['value'];
-        }, $items);
-      $items_id = implode(',', $items_id);
-
-      //create update statement
-      $statement = "UPDATE `questions` SET `order` = CASE";
-
-      foreach($items as $item){
-          $statement .= " WHEN `id` = ". $item['value'] ." THEN ". $item['order'];
-      }
-      $statement .= " ELSE `order` END WHERE id in(".$items_id. ")";
-
-
-        DB::statement($statement);
-        //$this->emitSelf('refreshComponent');
-
-  /*    DB::statement(
-        "UPDATE `questions`
-       SET `order` = CASE
-       WHEN `id` = 1  THEN 6
-       WHEN `id` = 2 THEN 2
-       WHEN `id` = 3 THEN 5
-       ELSE `order`
-       END WHERE id in(1,2,3)"
-       );
-
-*/
-      //$this->questions = Question::all()->sortBy('order');
-      //  dd($this->questions);
-
+        Question::changeOrder($items);
     }
 
 
