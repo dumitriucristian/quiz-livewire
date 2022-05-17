@@ -11,3 +11,7 @@ watch
 
 watch with hot
 ```npx mix watch -- --watch-options-poll=1000 --hot```
+
+
+test
+```php artisan test```

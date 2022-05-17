@@ -8,6 +8,7 @@ uses(RefreshDatabase::class);
 
 
 beforeEach(function() {
+    $this->refreshDatabase();
     $this->user = User::factory()->create();
 });
 
@@ -75,5 +76,30 @@ test('question can be edited', function(){
 
     $question =  Question::all()->first();
     expect($question)->text->toEqual('Edited question');
+
+});
+
+test('question order can be changed', function(){
+
+    Livewire::actingAs($this->user);
+    $firstQuestion = Question::factory(1)->create( ["text"=>"First question", "order"=>1]);
+    $secondQuestion = Question::factory(1)->create( ["text"=>"Second question", "order"=>2]);
+    $thirdQuestion = Question::factory(1)->create(["text"=>"Third question",  "order"=>3]);
+    $questions = Question::all();
+    expect($questions)->toHaveCount(3);
+
+    $params = [
+        ["value" => $firstQuestion[0]->id, "order" => 2],
+        ["value" => $secondQuestion[0]->id , "order" => 3],
+        ["value"=> $thirdQuestion[0]->id, "order" => 2]
+    ];
+
+    Livewire::test(QuizAdmin::class)
+    ->call('updateQuestionsOrder', $params);
+
+    $question = Question::find($thirdQuestion[0]->id);
+
+    expect($question->order)->toBe(2);
+
 
 });

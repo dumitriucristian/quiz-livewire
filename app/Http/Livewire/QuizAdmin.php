@@ -6,6 +6,7 @@ use App\Models\Answer;
 use Livewire\Component;
 use App\Models\Question;
 use Illuminate\Support\Facades\DB;
+use SebastianBergmann\Diff\Exception;
 
 class QuizAdmin extends Component
 {
@@ -29,7 +30,7 @@ class QuizAdmin extends Component
 
     public function render()
     {
-        $this->questions = Question::all()->sortDesc();
+        $this->questions = Question::all()->sortBy('order');
 
         return view('livewire.quiz-admin', [
             "questions" => $this->questions,
@@ -159,24 +160,28 @@ class QuizAdmin extends Component
       $statement = "UPDATE `questions` SET `order` = CASE";
 
       foreach($items as $item){
-          $statement .= " WHEN `id` = ". $item['order'] ." THEN ". $item['value'];
+          $statement .= " WHEN `id` = ". $item['value'] ." THEN ". $item['order'];
       }
-      $statement .= " else `order` END WHERE id in(".$items_id. ")";
+      $statement .= " ELSE `order` END WHERE id in(".$items_id. ")";
 
-      //dd($statement);
-      DB::statement($statement);
-      /* DB::statement(
+
+        DB::statement($statement);
+        //$this->emitSelf('refreshComponent');
+
+  /*    DB::statement(
         "UPDATE `questions`
        SET `order` = CASE
        WHEN `id` = 1  THEN 6
        WHEN `id` = 2 THEN 2
+       WHEN `id` = 3 THEN 5
        ELSE `order`
-       END WHERE id in(1,2)"
+       END WHERE id in(1,2,3)"
        );
 
-        */
+*/
+      //$this->questions = Question::all()->sortBy('order');
+      //  dd($this->questions);
 
-      //  dd(Question::all());
     }
 
 
