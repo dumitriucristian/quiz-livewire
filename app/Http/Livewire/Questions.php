@@ -5,10 +5,9 @@ namespace App\Http\Livewire;
 use App\Models\Answer;
 use Livewire\Component;
 use App\Models\Question;
-use Illuminate\Support\Facades\DB;
-use SebastianBergmann\Diff\Exception;
 
-class QuizAdmin extends Component
+
+class Questions extends Component
 {
     public $questionText;
     public $answerText;
@@ -32,7 +31,7 @@ class QuizAdmin extends Component
     {
         $this->questions = Question::all()->sortBy('order');
 
-        return view('livewire.quiz-admin', [
+        return view('livewire.questions', [
             "questions" => $this->questions,
             "answers" => $this->answers,
             ]);
@@ -79,7 +78,7 @@ class QuizAdmin extends Component
 
     public function getAnswers(Question $question)
     {
-        return $question->answers;
+        return $question->answers->sortBy('order');
     }
 
     public function showAnswers(Question $question)
@@ -87,7 +86,7 @@ class QuizAdmin extends Component
 
         $this->showAnswerForm = 'block';
         $this->questionId = $question->id;
-        $this->answers = $question->answers;
+        $this->answers = $question->answers->sortBy('order');
 
     }
 
@@ -107,7 +106,7 @@ class QuizAdmin extends Component
         $question = Question::findOrFail($questionId);
         $question->delete();
         $this->answers = [];
-        $this->questions = Question::all()->sortDesc();
+        $this->questions = Question::all()->sortBy('order');
 
     }
 
@@ -118,7 +117,8 @@ class QuizAdmin extends Component
     }
 
 
-    public function updateQuestion(){
+    public function updateQuestion()
+    {
         $validatedData = $this->validate([
             'questionText' => 'required:min:6',
             'questionId' => 'required'
@@ -136,7 +136,8 @@ class QuizAdmin extends Component
         $this->answerText = $answer['text'];
     }
 
-    public function updateAnswer(){
+    public function updateAnswer()
+    {
         $validatedData = $this->validate([
             'answerText' => 'required:min:6',
             'answerId' => 'required'
@@ -147,10 +148,15 @@ class QuizAdmin extends Component
         $answer->save();
 
     }
+
     public function updateQuestionsOrder( $items)
     {
         Question::changeOrder($items);
     }
 
-
+    public function updateAnswersOrder( $items)
+    {
+        $answers = Answer::changeOrder($items);
+        $this->answers = $answers->sortBy('order');
+   }
 }

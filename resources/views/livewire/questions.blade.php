@@ -55,17 +55,26 @@
                         </div>
                     </form>
                 </div>
-                <div class="grid bg-white gap-4">
+                <ul class="grid bg-white gap-4" wire:sortable="updateAnswersOrder">
                     @if($answers)
                         @foreach ($answers as $index => $answer)
-                            <div wire:key="answer-id-{{ $answer->id }}" class="p-2 bg-gray-500 text-white flex justify-between">
-                                <p>{{ $answer->text }}</p>
+                            <li
+                                wire:key="answer-id-{{ $answer->id }}"
+                                wire:sortable.item="{{$answer->id}}"
+                                class="p-2 bg-gray-500 text-white flex justify-between">
+                                <span wire:sortable.handle>MOVE</span>
+                                <span>{{ $answer->text }}</span>
                                 <span><button wire:click="deleteAnswer({{ $answer->id}})">Delete</button></span>
-                                <span><button  wire:click.stop="openEditAnswer({{$answer}})" @click.stop="open = true; answerModal = true;" >Edit</button></span>
-                            </div>
+                                <span>
+                                    <button
+                                        wire:click.stop="openEditAnswer({{$answer}})"
+                                        @click.stop="open = true; answerModal = true;"
+                                    >Edit</button>
+                                </span>
+                            </li>
                         @endforeach
                     @endif
-                </div>
+                </ul>
             </div>
         </div>
     </div>

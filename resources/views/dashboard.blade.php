@@ -15,5 +15,5 @@
         </div>
     </div>
 
-    <livewire:quiz-admin />
+    <livewire:questions />
 </x-app-layout>
