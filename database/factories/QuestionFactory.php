@@ -4,7 +4,9 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Question;
+use App\Models\Answer;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Question>
@@ -20,7 +22,7 @@ class QuestionFactory extends Factory
     {
         return [
             'text' => $this->faker->text(),
-            'order'=> $this->faker->randomNumber()
+            'order'=> $this->faker->numberBetween(1,1000),
         ];
     }
 

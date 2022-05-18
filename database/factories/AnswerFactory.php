@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Answer;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
@@ -18,7 +20,7 @@ class AnswerFactory extends Factory
     {
         return [
             'text'=> $this->faker->text(),
-            'order'=> $this->faker->randomNumber()
+            'order'=> $this->faker->randomNumber(),
         ];
     }
 }

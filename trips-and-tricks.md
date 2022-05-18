@@ -15,3 +15,8 @@ watch with hot
 
 test
 ```php artisan test```
+factory
+```App\Models\Question::factory()->times(10)->create();```
+seed
+```php artisan db:seed --class=TestSeeder
+```

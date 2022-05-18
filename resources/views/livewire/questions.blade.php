@@ -8,6 +8,7 @@
         <div class="max-w-7xl mx-auto p-6  m-4">
             <h1 class="font-medium">Quiz admin panel</h1>
         </div>
+
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid md:grid-cols-2 gap-4 bg-white shadow rounded m-4 p-6">
             <div class="bg-gray-100 p-6">
                 <p>Questions</p>
@@ -18,9 +19,8 @@
                         <button type="submit" class="btn  px-6 shadow-md bg-green-500">Add Question</button>
                     </div>
                 </form>
-                <ul class="grid bg-white gap-4" wire:sortable="updateQuestionsOrder" >
+                <ul class="grid bg-white gap-4" wire:sortable="updateQuestionsOrder"  >
                     @if($questions)
-
                         @foreach ($questions as $index => $question)
                             <li
                                 class="p-2 bg-gray-500 text-white flex justify-between"
@@ -34,8 +34,12 @@
                                 <span><button wire:click="showAnswers({{$question}})">Answers</button></span>
                             </li>
                         @endforeach
+
                     @endif
                 </ul>
+                <div class="d-flex justify-center max-w2-xl">
+                    {{$paginatedQuestions->onEachSide(2)->links('vendor.livewire.question-pagination')}}
+                </div>
             </div>
             <!--//https://laravel-livewire.com/screencasts/s8-dragging-list -->
             <div class="bg-gray-100 p-6">

@@ -5,10 +5,12 @@ namespace App\Http\Livewire;
 use App\Models\Answer;
 use Livewire\Component;
 use App\Models\Question;
-
+use Livewire\WithPagination;
 
 class Questions extends Component
 {
+    use WithPagination;
+
     public $questionText;
     public $answerText;
     public $questions;
@@ -18,6 +20,7 @@ class Questions extends Component
     public $showAnswerForm;
     public $showModal;
     public $answerId;
+
 
     public function mount()
     {
@@ -29,11 +32,13 @@ class Questions extends Component
 
     public function render()
     {
-        $this->questions = Question::all()->sortBy('order');
+        $paginatedQuestions = Question::orderBy('order')->paginate(3);
+        $this->questions = $paginatedQuestions->items();
 
         return view('livewire.questions', [
-            "questions" => $this->questions,
+            "questions" =>$this->questions,
             "answers" => $this->answers,
+            "paginatedQuestions" => $paginatedQuestions
             ]);
     }
 
@@ -106,7 +111,6 @@ class Questions extends Component
         $question = Question::findOrFail($questionId);
         $question->delete();
         $this->answers = [];
-        $this->questions = Question::all()->sortBy('order');
 
     }
 
