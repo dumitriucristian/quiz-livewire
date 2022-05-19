@@ -38,7 +38,7 @@
                     @endif
                 </ul>
                 <div class="d-flex justify-center max-w2-xl">
-                    {{$paginatedQuestions->onEachSide(2)->links('vendor.livewire.question-pagination')}}
+                    {{$paginatedQuestions->links('vendor.livewire.question-pagination')}}
                 </div>
             </div>
             <!--//https://laravel-livewire.com/screencasts/s8-dragging-list -->

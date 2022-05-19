@@ -38,7 +38,8 @@ class Answer extends Model
             return $item['value'];
         },$items);
 
-        return Answer::whereIn('id',$answersIDs)->get();
+        return Answer::whereIn('id',$answersIDs)->orderBy('order')->orderByDesc('updated_at')->get();
+
     }
 
     public function getIDs(array $items): string

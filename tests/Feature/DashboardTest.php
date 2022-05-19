@@ -83,9 +83,11 @@ test('question can be edited', function(){
 test('question order can be changed', function(){
 
     Livewire::actingAs($this->user);
+
     $firstQuestion = Question::factory(1)->create( ["text"=>"First question", "order"=>1]);
     $secondQuestion = Question::factory(1)->create( ["text"=>"Second question", "order"=>2]);
     $thirdQuestion = Question::factory(1)->create(["text"=>"Third question",  "order"=>3]);
+
     $questions = Question::all();
     expect($questions)->toHaveCount(3);
 

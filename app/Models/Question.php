@@ -16,7 +16,7 @@ class Question extends Model
         return $this->hasMany(Answer::class);
     }
 
-    public function scopeChangeOrder($query, array $items): void
+    public function scopeChangeOrder($query, array $items)
     {
         $iDs = $this->getIDs($items);
         $statement = $this->createStatement($items, $iDs);

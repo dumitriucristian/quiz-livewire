@@ -6,6 +6,7 @@ use App\Models\Answer;
 use Livewire\Component;
 use App\Models\Question;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class Questions extends Component
 {
@@ -32,28 +33,23 @@ class Questions extends Component
 
     public function render()
     {
-        $paginatedQuestions = Question::orderBy('order')->paginate(3);
-        $this->questions = $paginatedQuestions->items();
+
+        $paginatedQuestions = Question::query()->orderBy('order','asc')->orderBy('updated_at','desc')->paginate(20);
+        $this->questions= $paginatedQuestions->items();
 
         return view('livewire.questions', [
-            "questions" =>$this->questions,
-            "answers" => $this->answers,
             "paginatedQuestions" => $paginatedQuestions
             ]);
     }
 
-
-
     public function createQuestion() {
         $validatedData = $this->validate([
-            'questionText' => 'required:min:6'
+            'questionText' => 'required|min:6'
         ]);
-
-        $count = Question::count();
 
         Question::create([
             'text' => $validatedData['questionText'],
-            'order' => $count
+            'order' => 0
         ]);
 
         $this->reset(['questionText']);
@@ -62,17 +58,14 @@ class Questions extends Component
     public function createAnswer() {
 
         $validatedData = $this->validate([
-            'answerText' => 'required:min:6',
+            'answerText' => 'required|min:6',
             'questionId' => 'required'
         ]);
-
-        $count = Answer::count();
 
         Answer::create([
             'text' => $validatedData['answerText'],
             'question_id' => $validatedData['questionId'],
-            'order' => $count
-
+            'order' => 0
         ]);
 
         $question = Question::findOrFail($validatedData['questionId']);
@@ -83,7 +76,7 @@ class Questions extends Component
 
     public function getAnswers(Question $question)
     {
-        return $question->answers->sortBy('order');
+        return $question->answers->sortBy('order')->sortByDesc('updated_at');
     }
 
     public function showAnswers(Question $question)
@@ -91,27 +84,24 @@ class Questions extends Component
 
         $this->showAnswerForm = 'block';
         $this->questionId = $question->id;
-        $this->answers = $question->answers->sortBy('order');
+        $this->answers = $question->answers->sortBy('order')->sortByDesc('updated_at');
 
     }
 
     public function deleteAnswer($answerId)
     {
-
         $answer = Answer::findOrFail($answerId);
         $questionId = $answer->question->id;
         $answer->delete();
-        $question = Question::findOrFail($questionId);
-        $this->answers = $question->answers;
+
+        $this->answers = Answer::query()->where('question_id', $questionId)->orderBy('order')->orderBy('updated_at','desc')->get();
     }
 
     public function deleteQuestion($questionId)
     {
-
         $question = Question::findOrFail($questionId);
         $question->delete();
         $this->answers = [];
-
     }
 
     public function openEditQuestion($question)
@@ -161,6 +151,6 @@ class Questions extends Component
     public function updateAnswersOrder( $items)
     {
         $answers = Answer::changeOrder($items);
-        $this->answers = $answers->sortBy('order');
+        $this->answers = $answers;
    }
 }
