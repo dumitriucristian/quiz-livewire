@@ -11,26 +11,20 @@ uses(RefreshDatabase::class);
 beforeEach(function() {
     $this->refreshDatabase();
     $this->user = User::factory()->create();
+    Livewire::actingAs($this->user);
 });
 
 it('has dashboard page', function () {
-
-    Livewire::actingAs($this->user);
     $response = $this->get('/dashboard');
-
     $response->assertStatus(200);
-
-
 });
 
 test('QuizAdmin component exist and return 200', function () {
-    Livewire::actingAs($this->user);
     $component = Livewire::test(Questions::class);
     $component->assertStatus(200);
 });
 
 test('question text is required', function () {
-    Livewire::actingAs($this->user);
     Livewire::test(Questions::class)
     ->set('questionText')
     ->call('createQuestion')
@@ -39,8 +33,6 @@ test('question text is required', function () {
 });
 
 test('new question is created', function () {
-
-    Livewire::actingAs($this->user);
     Livewire::test(Questions::class)
         ->set(['questionText' => 'This is a new question'])
         ->call('createQuestion');
@@ -55,13 +47,11 @@ test('question is deleted', function(){
     $questions =  Question::all();
     expect($questions)->toHaveCount(5);
 
-    Livewire::actingAs($this->user);
     Livewire::test(Questions::class)
         ->call('deleteQuestion', 5);
 
     $question = Question::all();
     expect($question)->toHaveCount(4);
-
 });
 
 test('question can be edited', function(){
@@ -70,7 +60,6 @@ test('question can be edited', function(){
 
     expect($question)->text->toEqual('First question');
 
-    Livewire::actingAs($this->user);
     Livewire::test(Questions::class)
         ->set(['questionText' => 'Edited question', 'questionId' => $question->id])
         ->call('updateQuestion', $question->id,);
@@ -81,9 +70,6 @@ test('question can be edited', function(){
 });
 
 test('question order can be changed', function(){
-
-    Livewire::actingAs($this->user);
-
     $firstQuestion = Question::factory(1)->create( ["text"=>"First question", "order"=>1]);
     $secondQuestion = Question::factory(1)->create( ["text"=>"Second question", "order"=>2]);
     $thirdQuestion = Question::factory(1)->create(["text"=>"Third question",  "order"=>3]);
@@ -103,12 +89,9 @@ test('question order can be changed', function(){
     $question = Question::find($thirdQuestion[0]->id);
 
     expect($question->order)->toBe(2);
-
-
 });
 
 test('answer can be added', function(){
-    Livewire::actingAs($this->user);
     $question = Question::factory(1)->create();
 
     expect($question[0]->id)->toBeInt();
@@ -118,11 +101,9 @@ test('answer can be added', function(){
     $question = Question::find($question[0]->id);
 
     expect($question->answers)->toHaveCount(1);
-
 });
 
 test('answer can be edited', function(){
-    Livewire::actingAs($this->user);
     $question = Question::factory(1)->create();
     $answer = Answer::factory(1)->create(
         [
@@ -137,12 +118,9 @@ test('answer can be edited', function(){
     $answer = Answer::find($answer[0]->id);
 
     expect($answer->text)->toBeString('Updated smart answer');
-
-
 });
 
 test('answer can be removed', function() {
-    Livewire::actingAs($this->user);
     $question = Question::factory(1)->create();
 
     $firstAnswer = Answer::factory(1)->create(['question_id'=> $question[0]->id]);
@@ -151,13 +129,10 @@ test('answer can be removed', function() {
     Livewire::test(Questions::class)
         ->call('deleteAnswer', $firstAnswer[0]->id);
 
-
     expect(Answer::all())->toHaveCount(1);
 });
 
-
 test('answers can be order by order',function(){
-    Livewire::actingAs($this->user);
     $question = Question::factory(1)->create();
 
     $firstAnswer = Answer::factory(1)->create(['question_id'=> $question[0]->id,'order'=>7]);

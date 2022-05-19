@@ -18,7 +18,7 @@ class TestSeeder extends Seeder
     public function run()
     {
 
-        Question::factory()->count(10000)->hasAnswers(3)->create();
+        Question::factory()->count(50)->hasAnswers(3)->create();
 
     }
 }

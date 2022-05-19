@@ -6,3 +6,8 @@
 - order result
 17/05/2022
 - create paginated result
+19/05/2022
+- create quiz-admin component
+- multiple paginated widgets in the same page
+- tailwind tables
+- alpine set

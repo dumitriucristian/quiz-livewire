@@ -6,11 +6,14 @@ use App\Models\Answer;
 use Livewire\Component;
 use App\Models\Question;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\DB;
+
+
 
 class Questions extends Component
 {
     use WithPagination;
+
+    const QUESTIONS_PER_PAGE = 10;
 
     public $questionText;
     public $answerText;
@@ -34,7 +37,11 @@ class Questions extends Component
     public function render()
     {
 
-        $paginatedQuestions = Question::query()->orderBy('order','asc')->orderBy('updated_at','desc')->paginate(20);
+        $paginatedQuestions = Question::query()
+            ->orderBy('order','asc')
+            ->orderBy('updated_at','desc')
+            ->paginate(self::QUESTIONS_PER_PAGE);
+
         $this->questions= $paginatedQuestions->items();
 
         return view('livewire.questions', [
@@ -94,7 +101,11 @@ class Questions extends Component
         $questionId = $answer->question->id;
         $answer->delete();
 
-        $this->answers = Answer::query()->where('question_id', $questionId)->orderBy('order')->orderBy('updated_at','desc')->get();
+        $this->answers = Answer::query()
+            ->where('question_id', $questionId)
+            ->orderBy('order')
+            ->orderBy('updated_at','desc')
+            ->get();
     }
 
     public function deleteQuestion($questionId)
