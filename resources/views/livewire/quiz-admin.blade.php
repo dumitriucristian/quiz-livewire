@@ -79,7 +79,20 @@
                     <tr>
                         <td>{{$quizQuestion->id}}</td>
                         <td>{{$question->text}}</td>
-                        <td><button class="py-2 px-1 rounded shadow-md bg-indigo-200 text-white" wire:click="detachQuestion({{$quiz->id}},{{$quizQuestion->id}})">Remove</button></td>
+                        <td>
+                            <button
+                                class="py-1 px-2 rounded shadow-md bg-indigo-200 text-white"
+                                wire:click="detachQuestion({{$quiz->id}},{{$quizQuestion->id}})"
+                            >Remove
+                            </button>
+                        </td>
+                        <td>
+                            <button  class="py-1 px-2 rounded shadow-md bg-indigo-400 text-white"
+                                     wire:click="checkAnswers({{$quizQuestion->id}})"
+                                     >
+                                See Answers
+                            </button>
+                        </td>
 
                     </tr>
                 @endforeach
@@ -90,11 +103,15 @@
             <p>Anaswers</p>
             <table>
                 <thead>
+                @foreach($answers as $answer)
                     <tr>
-                        <th>id</th>
-                        <th>title</th>
-                        <th>Add</th>
+                        <th>{{$answer->id}}</th>
+                        <th>{{$answer->text}}</th>
+                        <th><button class="py-1 px-2 rounded shadow-md bg-indigo-400 text-white">
+                                Details
+                            </button></th>
                     </tr>
+                @endforeach
                 </thead>
                 <tbody>
                     <tr>

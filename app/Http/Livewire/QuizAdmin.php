@@ -19,6 +19,7 @@ class QuizAdmin extends Component
     public $questions;
     public $currentQuiz;
     public $quizQuestions;
+    public $answers;
 
     protected $listeners = ['deleteQuiz','setQuiz'];
 
@@ -27,6 +28,7 @@ class QuizAdmin extends Component
         $this->quizzes =[];
         $this->questions = [];
         $this->quizQuestions = [];
+        $this->answers = [];
         $this->currentQuiz = '';
     }
 
@@ -52,6 +54,7 @@ class QuizAdmin extends Component
             'paginatedQuestions' => $paginatedQuestions,
 
             'quizQuestions' => $this->quizQuestions,
+            'answers' => $this->answers
         ]);
     }
 
@@ -61,7 +64,12 @@ class QuizAdmin extends Component
         $this->quizQuestions = Quiz::findOrFail($quizId)->questions()->get();
        // dd($this->quizQuestions);
     }
+    public function checkAnswers($questionId)
+    {
+        $question= Question::findOrFail($questionId);
+          $this->answers =   $question->answers()->get();
 
+    }
     public function detachQuestion($quizId, $questionId)
     {
         $quiz = Quiz::findOrFail($quizId);
