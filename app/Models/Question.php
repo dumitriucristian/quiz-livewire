@@ -9,11 +9,17 @@ use Illuminate\Support\Facades\DB;
 class Question extends Model
 {
     use HasFactory;
+
     protected $fillable = ["text","order"];
 
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function quizzes()
+    {
+        return $this->belongsToMany(Question::class)->withTimestamps();
     }
 
     public function scopeChangeOrder($query, array $items)

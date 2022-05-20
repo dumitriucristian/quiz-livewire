@@ -11,18 +11,22 @@ class QuizAdmin extends Component
 {
     use WithPagination;
 
-    const QUIZZES_PER_PAGE = 4;
+    const QUIZZES_PER_PAGE = 20;
     const QUESTIONS_PER_PAGE = 10;
 
     public $title;
     public $quizzes;
     public $questions;
     public $currentQuiz;
+    public $quizQuestions;
+
+    protected $listeners = ['deleteQuiz','setQuiz'];
 
     public function mount()
     {
         $this->quizzes =[];
         $this->questions = [];
+        $this->quizQuestions = [];
         $this->currentQuiz = '';
     }
 
@@ -43,24 +47,40 @@ class QuizAdmin extends Component
         return view('livewire.quiz-admin',[
             'quizzes'=>  $this->quizzes,
             'paginatedQuizzes' => $paginatedQuizzes,
+
             'questions' => $this->questions,
-            'paginatedQuestions' => $paginatedQuestions
+            'paginatedQuestions' => $paginatedQuestions,
+
+            'quizQuestions' => $this->quizQuestions,
         ]);
     }
 
     public function setQuiz($quizId)
     {
         $this->currentQuiz = $quizId;
+        $this->quizQuestions = Quiz::findOrFail($quizId)->questions()->get();
+       // dd($this->quizQuestions);
     }
 
-    public function setQuestion($quizId)
+    public function detachQuestion($quizId, $questionId)
     {
-        dd($this->currentQuiz);
-        if (empty($this->currentQuiz))
-        {
+        $quiz = Quiz::findOrFail($quizId);
+        $quiz->questions()->detach($questionId);
+        $this->quizQuestions = Quiz::findOrFail($quizId)->questions()->get();
+    }
 
+    public function attachQuestion($questionId)
+    {
+
+        if (empty($this->currentQuiz)) {
+            dd("Qurrent quiz is not set check event setQuiz");
         }
-        dd($this->currentQuiz, $quizId);
+        $quiz = Quiz::findOrFail($this->currentQuiz);
+
+        $quiz->questions()->attach($questionId);
+        $this->quizQuestions = $quiz->questions()->get();
+
+        //dd$this->quizQuestions);
     }
 
     public function createQuiz()
@@ -73,13 +93,19 @@ class QuizAdmin extends Component
         $quiz->save();
 
         $this->quizzes = Quiz::all();
+        $this->title = '';
+
     }
 
     public function deleteQuiz($quizId)
     {
         $quiz = Quiz::findOrFail($quizId);
         $quiz->delete();
-        $this->quizzes = Quiz::all();
+        $paginatedQuizzes = Quiz::query()
+            ->orderBy('id')
+            ->paginate(self::QUIZZES_PER_PAGE,['*'],'quizPage');
+
+        $this->quizzes = $paginatedQuizzes->items();
     }
 
 

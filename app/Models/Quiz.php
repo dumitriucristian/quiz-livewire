@@ -12,4 +12,9 @@ class Quiz extends Model
     protected $table = "quizzes";
     protected $fillable = ["title"];
 
+
+    public function questions()
+    {
+        return $this->belongsToMany(Question::class)->withTimestamps();
+    }
 }

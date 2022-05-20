@@ -16,4 +16,6 @@
     </div>
 
     <livewire:questions />
+
 </x-app-layout>
+
