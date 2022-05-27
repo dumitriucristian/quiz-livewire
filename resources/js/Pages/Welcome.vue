@@ -1,17 +1,12 @@
 <template>
-    <p>test: {{ test }}</p>
     <div v-for="quiz in quizzes">
-        <p>{{ quiz.title }}</p>
+        <p>{{ quiz.title }} <a :href="/quiz/+ quiz.id">Take this quiz {{quiz.id}}</a></p>
     </div>
 </template>
-
 <script>
 export default {
-    name: "Welcome.vue",
     props: {
-        quizzes: Array,
-        name: String,
-        test: String,
+        quizzes: Array
     }
 }
 </script>

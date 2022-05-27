@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Quiz;
+use App\Http\Controllers\QuizController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,13 +16,12 @@ use App\Models\Quiz;
 */
 
 Route::get('/', function () {
-
     return Inertia::render('Welcome',[
         "quizzes" => Quiz::all(),
-        "title" => "Some title asdfasdf",
-        "test" => "some test"
     ]);
 });
+
+Route::get('/quiz/{quiz}', [QuizController::class, 'show']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
