@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Inertia\Inertia;
+use App\Models\Quiz;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,7 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+
+    return Inertia::render('Welcome',[
+        "quizzes" => Quiz::all(),
+        "title" => "Some title asdfasdf",
+        "test" => "some test"
+    ]);
 });
 
 Route::get('/dashboard', function () {
